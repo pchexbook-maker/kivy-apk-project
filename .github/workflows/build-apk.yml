@@ -14,10 +14,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            python3-pip python3-setuptools python3-wheel \
+            git zip unzip openjdk-17-jdk \
+            autoconf libtool pkg-config zlib1g-dev \
+            libncurses5-dev libncursesw5-dev libtinfo5 \
+            cmake libffi-dev libssl-dev
+
+      - name: Install Buildozer
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade buildozer cython virtualenv
+
       - name: Build APK
-        uses: ArtemSBulgakov/buildozer-action@v1
-        with:
-          command: buildozer android debug
+        run: |
+          buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
